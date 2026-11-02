@@ -15,3 +15,22 @@ Content-Type: application/json
   "owner": "Blob",
   "image": "/images/200.jpg"
 }
+
+
+### get users
+GET http://127.0.0.1:3000/api/v1/users
+
+### get user with id
+GET http://127.0.0.1:3000/api/v1/users/3609
+
+### post user
+POST http://127.0.0.1:3000/api/v1/users
+Content-Type: application/json
+
+{
+  "name": "Blob",
+  "username": "blobbo",
+  "email": "blob@metropolia.fi",
+  "role": "user",
+  "password": "password"
+}
