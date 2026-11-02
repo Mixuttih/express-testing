@@ -1,8 +1,7 @@
 import express from 'express';
-const hostname = '127.0.0.1';
 const app = express();
-const port = 3000;
 
+app.use(express.json());
 app.use('/images', express.static('public'));
 
 const cats = [
@@ -32,16 +31,22 @@ const cats = [
   },
 ];
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-
 app.get('/', (req, res) => {
   res.send('Welcome to my REST API!');
 });
 
 app.get('/api/v1/cats', (req, res) => {
   res.json(cats);
+});
+
+app.post('/api/v1/cats', (req, res) => {
+  const newCat = {
+    cat_id: Math.max(...cats.map((cat) => cat.cat_id)) + 1,
+    ...req.body
+  };
+
+  cats.push(newCat);
+  res.status(201).json(newCat);
 });
 
 app.get('/api/v1/cats/:id', (req, res) => {
@@ -73,4 +78,12 @@ app.get('/api/v1/cats/:id', (req, res) => {
   `);
 });
 
+app.put('/api/v1/cats/:id', (req, res) => {
+  res.json({ message: 'Cat item updated.' });
+});
 
+app.delete('/api/v1/cats/:id', (req, res) => {
+  res.json({ message: 'Cat item deleted.' });
+});
+
+export default app;

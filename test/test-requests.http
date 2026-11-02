@@ -1,0 +1,17 @@
+### get cats
+GET http://127.0.0.1:3000/api/v1/cats
+
+### get cat with id
+GET http://127.0.0.1:3000/api/v1/cats/1
+
+### post cat
+POST http://127.0.0.1:3000/api/v1/cats
+Content-Type: application/json
+
+{
+  "name": "Buffy",
+  "birthdate": "2022-04-20",
+  "weight": 3.5,
+  "owner": "Blob",
+  "image": "/images/200.jpg"
+}
