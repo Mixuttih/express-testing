@@ -16,6 +16,20 @@ Content-Type: application/json
   "image": "/images/200.jpg"
 }
 
+### put cat
+PUT http://127.0.0.1:3000/api/v1/cats/1
+Content-Type: application/json
+
+{
+  "name": "Buffy",
+  "birthdate": "2022-04-20",
+  "weight": 3.5,
+  "owner": "Blob",
+  "image": "/images/200.jpg"
+}
+
+### delete cat
+DELETE http://127.0.0.1:3000/api/v1/cats/1
 
 ### get users
 GET http://127.0.0.1:3000/api/v1/users
@@ -34,3 +48,18 @@ Content-Type: application/json
   "role": "user",
   "password": "password"
 }
+
+### put user
+PUT http://127.0.0.1:3000/api/v1/users/3612
+Content-Type: application/json
+
+{
+  "name": "Blob",
+  "username": "blobbo",
+  "email": "blob@metropolia.fi",
+  "role": "user",
+  "password": "password"
+}
+
+### delete user
+DELETE http://127.0.0.1:3000/api/v1/users/3612
