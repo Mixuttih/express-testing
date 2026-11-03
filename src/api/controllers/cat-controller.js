@@ -1,11 +1,18 @@
 import { createCat, findCatById, getAllCats } from '../models/cat-model.js';
 
 export function getCats(req, res) {
-  res.json(getAllCats());
+  res.json({
+    message: 'Cats retrieved.',
+    time: req.requestTime,
+    data: getAllCats()
+  });
 }
 
 export function addCat(req, res) {
-  const newCat = createCat(req.body);
+  const newCat = createCat({
+    ...req.body,
+    ...(req.file && { image: `/uploads/${req.file.filename}` }),
+  });
   res.status(201).json(newCat);
 }
 
