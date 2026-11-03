@@ -9,7 +9,10 @@ export function getCats(req, res) {
 }
 
 export function addCat(req, res) {
-  const newCat = createCat(req.body);
+  const newCat = createCat({
+    ...req.body,
+    ...(req.file && { image: `/uploads/${req.file.filename}` }),
+  });
   res.status(201).json(newCat);
 }
 
