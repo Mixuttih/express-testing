@@ -5,7 +5,7 @@ const cats = [
     birthdate: '2020-01-15',
     weight: 4.5,
     owner: 'Alice',
-    image: '/images/100.jpg',
+    originalImage: '/images/100.jpg',
   },
   {
     cat_id: 2,
@@ -13,7 +13,7 @@ const cats = [
     birthdate: '2019-06-20',
     weight: 5.0,
     owner: 'Bob',
-    image: '/images/200.jpg',
+    originalImage: '/images/200.jpg',
   },
   {
     cat_id: 3,
@@ -21,7 +21,7 @@ const cats = [
     birthdate: '2021-03-10',
     weight: 3.5,
     owner: 'Charlie',
-    image: '/images/300.jpg',
+    originalImage: '/images/300.jpg',
   },
 ];
 

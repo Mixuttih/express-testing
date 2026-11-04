@@ -11,9 +11,12 @@ export function getCats(req, res) {
 export function addCat(req, res) {
   const newCat = createCat({
     ...req.body,
-    ...(req.file && { image: `/uploads/${req.file.filename}` }),
+    ...(req.file && {
+      thumbnailImage: `/uploads/${req.file.thumbnailFilename}`,
+      originalImage: `/uploads/${req.file.filename}`,
+    }),
   });
-  res.status(201).json(newCat);
+  res.redirect(303, `/api/v1/cats/${newCat.cat_id}`);
 }
 
 export function getCatById(req, res) {
@@ -35,7 +38,7 @@ export function getCatById(req, res) {
       <body>
         <main>
           <h1>${foundCat.name}</h1>
-          <img src="${foundCat.image}" alt="${foundCat.name}">
+          <img src="${foundCat.originalImage}" alt="${foundCat.name}">
           <p>Birthdate: ${foundCat.birthdate}</p>
           <p>Weight: ${foundCat.weight} kg</p>
           <p>Owner: ${foundCat.owner}</p>

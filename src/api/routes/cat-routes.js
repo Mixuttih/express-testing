@@ -8,6 +8,7 @@ import {
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
 import requestTime from '../middlewares/request-time.js';
+import createThumbnail from '../middlewares/upload.js';
 import multer from 'multer';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -25,7 +26,7 @@ const upload = multer({ storage });
 const router = express.Router();
 
 router.get('/', logger, requestTime, getCats);
-router.post('/', upload.single('cat'), addCat);
+router.post('/', upload.single('cat'), createThumbnail, addCat);
 router.get('/:id', getCatById);
 router.put('/:id', updateCat);
 router.delete('/:id', deleteCat);
