@@ -1,47 +1,43 @@
-import { createUser, findUserById, getAllUsers } from '../models/user-model.js';
+import {
+  createUser,
+  findUserById,
+  getAllUsers,
+  modifyUser,
+  removeUser,
+} from '../models/user-model.js';
 
-export function getUsers(req, res) {
-  res.json(getAllUsers());
+export async function getUsers(_req, res) {
+  res.json(await getAllUsers());
 }
 
-export function addUser(req, res) {
-  const newUser = createUser(req.body);
+export async function addUser(req, res) {
+  const newUser = await createUser(req.body);
+  if (!newUser) {
+    return res.status(400).json({ message: 'User data is required.' });
+  }
   res.status(201).json(newUser);
 }
 
-export function getUserById(req, res) {
-  const userId = Number(req.params.id);
-  const foundUser = findUserById(userId);
+export async function getUserById(req, res) {
+  const foundUser = await findUserById(Number(req.params.id));
 
   if (!foundUser) {
     return res.sendStatus(404);
   }
 
-  res.send(`
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${foundUser.name}</title>
-      </head>
-      <body>
-        <main>
-          <h1>${foundUser.name}</h1>
-          <p>Username: ${foundUser.username}</p>
-          <p>Email: ${foundUser.email}</p>
-          <p>Role: ${foundUser.role}</p>
-          <p>Password: ${foundUser.password}</p>
-        </main>
-      </body>
-    </html>
-  `);
+  res.json(foundUser);
 }
 
-export function updateUser(req, res) {
+export async function updateUser(req, res) {
+  if (!(await modifyUser(req.body, Number(req.params.id)))) {
+    return res.sendStatus(404);
+  }
   res.json({ message: 'User item updated.' });
 }
 
-export function deleteUser(req, res) {
+export async function deleteUser(req, res) {
+  if (!(await removeUser(Number(req.params.id)))) {
+    return res.sendStatus(404);
+  }
   res.json({ message: 'User item deleted.' });
 }

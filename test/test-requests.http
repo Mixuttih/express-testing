@@ -2,40 +2,43 @@
 GET http://127.0.0.1:3000/api/v1/cats
 
 ### get cat with id
-GET http://127.0.0.1:3000/api/v1/cats/1
+GET http://127.0.0.1:3000/api/v1/cats/41
+
+### get cats by user id
+GET http://127.0.0.1:3000/api/v1/cats/user/37
 
 ### post cat
 POST http://127.0.0.1:3000/api/v1/cats
 Content-Type: application/json
 
 {
-  "name": "Buffy",
+  "cat_name": "Buffy",
   "birthdate": "2022-04-20",
   "weight": 3.5,
-  "owner": "Blob",
-  "image": "/images/200.jpg"
+  "owner": 37,
+  "filename": "/images/200.jpg"
 }
 
 ### put cat
-PUT http://127.0.0.1:3000/api/v1/cats/1
+PUT http://127.0.0.1:3000/api/v1/cats/41
 Content-Type: application/json
 
 {
-  "name": "Buffy",
+  "cat_name": "Buffy",
   "birthdate": "2022-04-20",
   "weight": 3.5,
-  "owner": "Blob",
-  "image": "/images/200.jpg"
+  "owner": 37,
+  "filename": "/images/200.jpg"
 }
 
 ### delete cat
-DELETE http://127.0.0.1:3000/api/v1/cats/1
+DELETE http://127.0.0.1:3000/api/v1/cats/43
 
 ### get users
 GET http://127.0.0.1:3000/api/v1/users
 
 ### get user with id
-GET http://127.0.0.1:3000/api/v1/users/3609
+GET http://127.0.0.1:3000/api/v1/users/37
 
 ### post user
 POST http://127.0.0.1:3000/api/v1/users
@@ -50,7 +53,7 @@ Content-Type: application/json
 }
 
 ### put user
-PUT http://127.0.0.1:3000/api/v1/users/3612
+PUT http://127.0.0.1:3000/api/v1/users/37
 Content-Type: application/json
 
 {
@@ -62,7 +65,7 @@ Content-Type: application/json
 }
 
 ### delete user
-DELETE http://127.0.0.1:3000/api/v1/users/3612
+DELETE http://127.0.0.1:3000/api/v1/users/38
 
 
 ### file upload

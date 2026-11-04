@@ -4,6 +4,7 @@ import {
   deleteCat,
   getCatById,
   getCats,
+  getCatsByUser,
   updateCat,
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
@@ -27,6 +28,7 @@ const router = express.Router();
 
 router.get('/', logger, requestTime, getCats);
 router.post('/', upload.single('cat'), createThumbnail, addCat);
+router.get('/user/:userId', getCatsByUser);
 router.get('/:id', getCatById);
 router.put('/:id', updateCat);
 router.delete('/:id', deleteCat);
