@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors';
 import catRoutes from './api/routes/cat-routes.js';
 import userRoutes from './api/routes/user-routes.js';
 import authRoutes from './api/routes/auth-routes.js';
 
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/images', express.static('public'));
