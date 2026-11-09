@@ -48,7 +48,7 @@ export async function createCat(cat) {
   return { cat_id: result.insertId };
 }
 
-export async function modifyCat(cat, id) {
+export async function modifyCat(cat, id, user) {
   const data = {
     cat_name: cat.cat_name ?? cat.name,
     weight: cat.weight,
@@ -63,14 +63,20 @@ export async function modifyCat(cat, id) {
 
   const values = fields.map((field) => data[field]);
   const assignments = fields.map((field) => `${field} = ?`).join(', ');
+  const isAdmin = user?.role === 'admin';
+  const whereClause = isAdmin ? 'cat_id = ?' : 'cat_id = ? AND owner = ?';
+  const queryValues = isAdmin ? [...values, id] : [...values, id, user?.user_id];
   const [result] = await promisePool.execute(
-    `UPDATE wsk_cats SET ${assignments} WHERE cat_id = ?`,
-    [...values, id],
+    `UPDATE wsk_cats SET ${assignments} WHERE ${whereClause}`,
+    queryValues,
   );
   return result.affectedRows > 0;
 }
 
-export async function removeCat(id) {
-  const [result] = await promisePool.execute('DELETE FROM wsk_cats WHERE cat_id = ?', [id]);
+export async function removeCat(id, user) {
+  const isAdmin = user?.role === 'admin';
+  const whereClause = isAdmin ? 'cat_id = ?' : 'cat_id = ? AND owner = ?';
+  const values = isAdmin ? [id] : [id, user?.user_id];
+  const [result] = await promisePool.execute(`DELETE FROM wsk_cats WHERE ${whereClause}`, values);
   return result.affectedRows > 0;
 }

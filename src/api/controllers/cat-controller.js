@@ -22,6 +22,7 @@ export async function getCatsByUser(req, res) {
 export async function addCat(req, res) {
   const newCat = await createCat({
     ...req.body,
+    owner: res.locals.user.user_id,
     ...(req.file && {
       filename: `/uploads/${req.file.filename}`,
     }),
@@ -62,14 +63,18 @@ export async function getCatById(req, res) {
 }
 
 export async function updateCat(req, res) {
-  if (!(await modifyCat(req.body, Number(req.params.id)))) {
+  const updates = { ...req.body };
+  delete updates.owner;
+  delete updates.user_id;
+
+  if (!(await modifyCat(updates, Number(req.params.id), res.locals.user))) {
     return res.sendStatus(404);
   }
   res.json({ message: 'Cat item updated.' });
 }
 
 export async function deleteCat(req, res) {
-  if (!(await removeCat(Number(req.params.id)))) {
+  if (!(await removeCat(Number(req.params.id), res.locals.user))) {
     return res.sendStatus(404);
   }
   res.json({ message: 'Cat item deleted.' });

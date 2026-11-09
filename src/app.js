@@ -1,6 +1,7 @@
 import express from 'express';
 import catRoutes from './api/routes/cat-routes.js';
 import userRoutes from './api/routes/user-routes.js';
+import authRoutes from './api/routes/auth-routes.js';
 
 const app = express();
 
@@ -15,5 +16,5 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/cats', catRoutes);
 app.use('/api/v1/users', userRoutes);
-
+app.use('/api/v1/auth', authRoutes);
 export default app;
