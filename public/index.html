@@ -8,14 +8,16 @@
 <body>
   <h1>Cat Upload</h1>
   <form action="/api/v1/cats/" method="post" enctype="multipart/form-data">
-  <input type="text" name="name" placeholder="Cat Name" />
-  <input type="text" name="birthdate" placeholder="Cat Birthdate" />
-  <input type="number" name="weight" step="0.1"placeholder="Cat Weight" />
-  <input type="text" name="owner" placeholder="Cat Owner" />
-  <h2>Upload Cat Image</h2>
-  <input type="file" name="cat" />
-  <br>
-  <button type="submit">Upload cat</button>
-</form>
+    <input type="text" name="name" placeholder="Cat Name" />
+    <input type="text" name="birthdate" placeholder="Cat Birthdate" />
+    <input type="number" name="weight" step="0.1"placeholder="Cat Weight" />
+    <input type="text" name="owner" placeholder="Cat Owner" />
+
+    <h2>Upload Cat Image</h2>
+    <input type="file" name="cat" />
+    <br>
+
+    <button type="submit">Upload cat</button>
+  </form>
 </body>
 </html>

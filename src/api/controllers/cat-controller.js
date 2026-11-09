@@ -1,24 +1,41 @@
-import { createCat, findCatById, getAllCats } from '../models/cat-model.js';
+import {
+  createCat,
+  findCatById,
+  getAllCats,
+  getCatsByUserId,
+  modifyCat,
+  removeCat,
+} from '../models/cat-model.js';
 
-export function getCats(req, res) {
+export async function getCats(req, res) {
   res.json({
     message: 'Cats retrieved.',
     time: req.requestTime,
-    data: getAllCats()
+    data: await getAllCats(),
   });
 }
 
-export function addCat(req, res) {
-  const newCat = createCat({
+export async function getCatsByUser(req, res) {
+  res.json(await getCatsByUserId(Number(req.params.userId)));
+}
+
+export async function addCat(req, res) {
+  const newCat = await createCat({
     ...req.body,
-    ...(req.file && { image: `/uploads/${req.file.filename}` }),
+    owner: res.locals.user.user_id,
+    ...(req.file && {
+      filename: `/uploads/${req.file.filename}`,
+    }),
   });
-  res.status(201).json(newCat);
+
+  if (!newCat) {
+    return res.status(400).json({ message: 'Cat data is required.' });
+  }
+  res.redirect(303, `/api/v1/cats/${newCat.cat_id}`);
 }
 
-export function getCatById(req, res) {
-  const catId = Number(req.params.id);
-  const foundCat = findCatById(catId);
+export async function getCatById(req, res) {
+  const foundCat = await findCatById(Number(req.params.id));
 
   if (!foundCat) {
     return res.sendStatus(404);
@@ -30,25 +47,35 @@ export function getCatById(req, res) {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>${foundCat.name}</title>
+        <title>${foundCat.cat_name}</title>
       </head>
       <body>
         <main>
-          <h1>${foundCat.name}</h1>
-          <img src="${foundCat.image}" alt="${foundCat.name}">
+          <h1>${foundCat.cat_name}</h1>
+          <img src="${foundCat.filename ?? ''}" alt="${foundCat.cat_name}">
           <p>Birthdate: ${foundCat.birthdate}</p>
           <p>Weight: ${foundCat.weight} kg</p>
-          <p>Owner: ${foundCat.owner}</p>
+          <p>Owner: ${foundCat.owner_name ?? 'Unknown'}</p>
         </main>
       </body>
     </html>
   `);
 }
 
-export function updateCat(req, res) {
+export async function updateCat(req, res) {
+  const updates = { ...req.body };
+  delete updates.owner;
+  delete updates.user_id;
+
+  if (!(await modifyCat(updates, Number(req.params.id), res.locals.user))) {
+    return res.sendStatus(404);
+  }
   res.json({ message: 'Cat item updated.' });
 }
 
-export function deleteCat(req, res) {
+export async function deleteCat(req, res) {
+  if (!(await removeCat(Number(req.params.id), res.locals.user))) {
+    return res.sendStatus(404);
+  }
   res.json({ message: 'Cat item deleted.' });
 }

@@ -4,10 +4,13 @@ import {
   deleteCat,
   getCatById,
   getCats,
+  getCatsByUser,
   updateCat,
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
 import requestTime from '../middlewares/request-time.js';
+import createThumbnail from '../middlewares/upload.js';
+import authenticateToken, { authorizeCatOwner } from '../middlewares/authentication.js';
 import multer from 'multer';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -25,9 +28,10 @@ const upload = multer({ storage });
 const router = express.Router();
 
 router.get('/', logger, requestTime, getCats);
-router.post('/', upload.single('cat'), addCat);
+router.post('/', authenticateToken, upload.single('cat'), createThumbnail, addCat);
+router.get('/user/:userId', getCatsByUser);
 router.get('/:id', getCatById);
-router.put('/:id', updateCat);
-router.delete('/:id', deleteCat);
+router.put('/:id', authenticateToken, authorizeCatOwner, updateCat);
+router.delete('/:id', authenticateToken, authorizeCatOwner, deleteCat);
 
 export default router;
