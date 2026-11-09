@@ -28,8 +28,8 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "Temporary User",
-  "username": "temporary-{{$timestamp}}",
+  "name": "TemporaryUser",
+  "username": "temporary{{$timestamp}}",
   "email": "temporary-{{$timestamp}}@example.com",
   "role": "user",
   "password": "temporary-password"
@@ -63,6 +63,7 @@ Authorization: Bearer {{loginUser.response.body.token}}
 
 ### Protected: create a cat
 # The owner is taken from the token; the request body cannot assign another owner.
+# Currently fails automatically, as file uploads are not supported in the test environment. The request is included for completeness.
 POST {{baseUrl}}/cats
 Content-Type: application/json
 Authorization: Bearer {{loginUser.response.body.token}}
@@ -72,7 +73,7 @@ Authorization: Bearer {{loginUser.response.body.token}}
   "birthdate": "2022-04-20",
   "weight": 3.5,
   "owner": 999999,
-  "filename": "/images/200.jpg"
+  "filename": "public/200.jpg"
 }
 
 ### Protected: upload a cat image

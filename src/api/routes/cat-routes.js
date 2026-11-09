@@ -9,26 +9,33 @@ import {
 } from '../controllers/cat-controller.js';
 import logger from '../middlewares/logger.js';
 import requestTime from '../middlewares/request-time.js';
-import createThumbnail from '../middlewares/upload.js';
+import createThumbnail, { handleUploadError, upload } from '../middlewares/upload.js';
 import authenticateToken, { authorizeCatOwner } from '../middlewares/authentication.js';
-import multer from 'multer';
-import crypto from 'node:crypto';
-import path from 'node:path';
-
-const storage = multer.diskStorage({
-  destination: 'uploads/',
-  filename: (_req, file, callback) => {
-    const extension = path.extname(file.originalname).toLowerCase();
-    callback(null, `${crypto.randomBytes(16).toString('hex')}${extension}`);
-  },
-});
-
-const upload = multer({ storage });
+import { body } from 'express-validator';
+import { validationErrors } from '../middlewares/error-handlers.js';
 
 const router = express.Router();
 
 router.get('/', logger, requestTime, getCats);
-router.post('/', authenticateToken, upload.single('cat'), createThumbnail, addCat);
+router.post(
+  '/',
+  authenticateToken,
+  upload.single('cat'),
+  handleUploadError,
+  body('cat_name').trim().notEmpty().isLength({ min: 3, max: 50 }),
+  body('weight').notEmpty().isFloat(),
+  body('owner')
+    .customSanitizer((value, { req }) => value ?? req.res.locals.user.user_id)
+    .notEmpty()
+    .isInt(),
+  body('birthdate').notEmpty().isISO8601(),
+  body('file')
+    .custom((_value, { req }) => Boolean(req.file))
+    .withMessage('File is required.'),
+  validationErrors,
+  createThumbnail,
+  addCat,
+);
 router.get('/user/:userId', getCatsByUser);
 router.get('/:id', getCatById);
 router.put('/:id', authenticateToken, authorizeCatOwner, updateCat);

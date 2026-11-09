@@ -29,12 +29,17 @@ export async function getCatsByUser(req, res, next) {
 
 export async function addCat(req, res, next) {
   try {
+    if (!req.file) {
+      const error = new Error('A cat image is required.');
+      error.status = 400;
+      next(error);
+      return;
+    }
+
     const newCat = await createCat({
       ...req.body,
       owner: res.locals.user.user_id,
-      ...(req.file && {
-        filename: `/uploads/${req.file.filename}`,
-      }),
+      filename: `/uploads/${req.file.filename}`,
     });
 
     if (!newCat) {
